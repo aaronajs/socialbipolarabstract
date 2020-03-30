@@ -13,29 +13,21 @@ class Model():
     def equationGenerator(self, values):
         equations = []
         for index in range(len(self.args)):
-            equations.append(values[index] - (self.args[index].score * (1 - self.findAttackedByIndex(self.args[index], values)) * (1 + self.findSupportedByIndex(self.args[index], values))))
+            arg = self.args[index]
+            equations.append(values[index] - (arg.score * (1 - self.findByIndex(arg, "attack", values)) * (1 + self.findByIndex(arg, "support", values))))
         return equations
 
-    def findAttackedByIndex(self, arg, values):
-        noAttackers = len(arg.attackedBy)
-        if noAttackers == 0: return 0
-        elif noAttackers == 1: return values[self.args.index(arg.attackedBy[0])]
-        else: return self.collectAttackers(arg, values, noAttackers, 1, values[self.args.index(arg.attackedBy[0])])
+    def findByIndex(self, arg, relationType, values):
+        if relationType == "attack": relationBy = arg.attackedBy
+        else: relationBy = arg.supportedBy 
+        noRelations = len(relationBy)
+        if noRelations == 0: return 0
+        elif noRelations == 1: return values[self.args.index(relationBy[0])]
+        else: return self.collectRelations(arg, values, relationBy, noRelations, 1, values[self.args.index(relationBy[0])])
 
-    def findSupportedByIndex(self, arg, values):
-        noSupporters = len(arg.supportedBy)
-        if noSupporters == 0: return 0
-        elif noSupporters == 1: return values[self.args.index(arg.supportedBy[0])]
-        else: return self.collectSupporters(arg, values, noSupporters, 1, values[self.args.index(arg.supportedBy[0])])
-
-    def collectAttackers(self, arg, values, noAttackers, current, collection):
-        for curr in range(1, noAttackers):
-            collection = collection + values[self.args.index(arg.attackedBy[curr])] - (collection * values[self.args.index(arg.attackedBy[curr])])
-        return collection
-
-    def collectSupporters(self, arg, values, noSupporters, current, collection):
-        for curr in range(1, noSupporters):
-            collection = collection + values[self.args.index(arg.supportedBy[curr])] - (collection * values[self.args.index(arg.supportedBy[curr])])
+    def collectRelations(self, arg, values, relationBy, noRelations, current, collection):
+        for curr in range(1, noRelations):
+            collection = collection + values[self.args.index(relationBy[curr])] - (collection * values[self.args.index(relationBy[curr])])
         return collection
         
     def initialEstimate(self, values): return abs(sum(array(self.equationGenerator(values))**2)-0)
