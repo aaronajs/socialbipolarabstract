@@ -25,12 +25,12 @@ class Argument():
         else: print("error")
 
     # would be linked to a user, but simplified for the purposed of implementation.
-    def setPos(self, pos): self.pos = pos
-    def setNeg(self, neg): self.neg = neg
-    def addPos(self): self.pos += 1
-    def addNeg(self): self.neg += 1
-    def removePos(self): self.pos -= 1
-    def removeNeg(self): self.neg -= 1 
+    def setPos(self, pos): self.pos = pos; self.calculateScore()
+    def setNeg(self, neg): self.neg = neg; self.calculateScore()
+    def addPos(self): self.pos += 1; self.calculateScore()
+    def addNeg(self): self.neg += 1; self.calculateScore()
+    def removePos(self): self.pos -= 1; self.calculateScore()
+    def removeNeg(self): self.neg -= 1; self.calculateScore()
 
     # score of the argument: ratio of positive to negative votes.
     def calculateScore(self):
@@ -40,11 +40,11 @@ class Argument():
     def setStrength(self, strength): self.strength = "{0:.2f}".format(strength)
 
     def __str__(self): 
-        string = "(" + str(self.id) + ": " + self.name + ", " + str(self.score) + ", " + str(self.strength) + ")  "
-        if self.attacks: string += "| attacks: "
-        for arg in self.attacks: string += "(" + str(arg.id) + ": " + arg.name + ")" + ", "
-        if self.attackedBy: string += "| attacked by: "
-        for arg in self.attackedBy: string += "(" + str(arg.id) + ": " + arg.name + ")" + ", "
+        string = "\'" + self.name + "\' : " + str(self.score) + " -> " + str(self.strength) + ")  |"
+        if self.attacks: string += " attacks: "
+        for arg in self.attacks: string += "(" + arg.name + ")" + ", "
+        if self.supports: string += " supports: "
+        for arg in self.supports: string += "(" + arg.name + ")" + ", "
         return string[:-2]
 
 # represents a Social Bipolar Abstract Argumentation Framework
