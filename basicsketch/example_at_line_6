@@ -1,0 +1,8 @@
+// example_at_line_6
+digraph {
+	a [label="a : 0"]
+	b [label="b : 0"]
+	c [label="c : 0"]
+	d [label="d : 0"]
+	e [label="e : 0"]
+}

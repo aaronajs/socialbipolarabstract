@@ -1,0 +1,8 @@
+// example_completed
+digraph {
+	a [label="a : 0.50"]
+	b [label="b : 0.50"]
+	c [label="c : 0.86"]
+	d [label="d : 0.20"]
+	e [label="e : 0.80"]
+}
