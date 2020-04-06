@@ -1,3 +1,6 @@
 .DS_Store
 basicsketch/
+sketch/
 __pycache__/
+*.pyc
+test.py

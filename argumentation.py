@@ -1,50 +1,32 @@
 # represents an argument node to be made in the framework
 class Argument():
     
-    idCounter = 0
-
-    def __init__(self, name, score = 0):
-        self.id = Argument.idCounter
+    def __init__(self, name, score):
         self.name = name
         self.attacks, self.attackedBy = [],[]
         self.supports, self.supportedBy = [],[]
-        self.score, self.strength = score,0
-        self.pos, self.neg = 0,0
-        Argument.idCounter += 1
+        self.score, self.strength = score, 0
     
     def attack(self, other):
-        if self is not other:
+        if self is not other and other not in self.supports:
             self.attacks.append(other)
             other.attackedBy.append(self)
-        else: print("error")
+        else: print("unable to add attack from " + self.name + " to " + other.name)
 
     def support(self, other):
-        if self is not other:
+        if self is not other and other not in self.attacks:
             self.supports.append(other)
             other.supportedBy.append(self)
-        else: print("error")
-
-    # would be linked to a user, but simplified for the purposed of implementation.
-    def setPos(self, pos): self.pos = pos; self.calculateScore()
-    def setNeg(self, neg): self.neg = neg; self.calculateScore()
-    def addPos(self): self.pos += 1; self.calculateScore()
-    def addNeg(self): self.neg += 1; self.calculateScore()
-    def removePos(self): self.pos -= 1; self.calculateScore()
-    def removeNeg(self): self.neg -= 1; self.calculateScore()
-
-    # score of the argument: ratio of positive to negative votes.
-    def calculateScore(self):
-        if self.pos == 0 and self.neg == 0: self.score = 0
-        else: self.score = self.pos / float(self.pos + self.neg)
+        else: print("unable to add support from " + self.name + " to " + other.name)
 
     def setStrength(self, strength): self.strength = "{0:.2f}".format(strength)
 
     def __str__(self): 
         string = "\'" + self.name + "\' : " + str(self.score) + " -> " + str(self.strength) + ")  |"
         if self.attacks: string += " attacks: "
-        for arg in self.attacks: string += "(" + arg.name + ")" + ", "
+        for argument in self.attacks: string += argument.name + ", "
         if self.supports: string += " supports: "
-        for arg in self.supports: string += "(" + arg.name + ")" + ", "
+        for argument in self.supports: string += argument.name + ", "
         return string[:-2]
 
 # represents a Social Bipolar Abstract Argumentation Framework
@@ -53,27 +35,11 @@ class Framework():
     def __init__(self):
         self.arguments = []
 
-    def addArg(self, arg): 
-        if arg not in self.arguments: 
-            self.arguments.append(arg)
+    def addArgument(self, argument): 
+        if argument not in self.arguments: 
+            self.arguments.append(argument)
 
-    def addArgs(self, args): 
-        for arg in args: self.addArg(arg)
-
-    def addAttack(self, first, second): first.attack(second)
-    def addSupport(self, first, second): first.support(second)
-
-    def addAttacks(self, attacks):
-        for args in attacks:
-            self.addAttack(args[0], args[1])
-
-    def addSupports(self, supports):
-        for args in supports:
-            self.addSupport(args[0], args[1])
-
-    def reset(self): self.arguments = []
-
-    def locate(self, name): return next((arg for arg in self.arguments if arg.name == name), None)
+    def locate(self, name): return next((argument for argument in self.arguments if argument.name == name), None)
 
     def __str__(self): 
         state = "Debate Results: \n" 
