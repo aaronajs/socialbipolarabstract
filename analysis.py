@@ -4,8 +4,9 @@ from numpy import array
 
 class Model(): 
 
-    def __init__(self):
+    def __init__(self, framework):
         self.arguments = []
+        self.calculateStrengths(framework)
 
     def equationGenerator(self, values):
         equations = []
@@ -30,17 +31,19 @@ class Model():
     def initialEstimate(self, values): return abs(sum(array(self.equationGenerator(values))**2)-0)
 
     def calculateStrengths(self, framework):
-        print("calculating strengths")
+        print("Calculating strengths")
         self.arguments = framework.arguments
         strengths = fsolve(self.equationGenerator,tuple(fmin(self.initialEstimate,tuple(argument.score for argument in self.arguments),disp=False)))
         for index in range(len(strengths)):
-            self.arguments[index].setStrength(strengths[index])
+            self.arguments[index].strength = strengths[index]
 
 class Analyser():
 
     def __init__(self, framework):
         self.extension = []
-        self.sortedArguments = sorted(framework.arguments, key=lambda argument: argument.strength, reverse=True)
+        framework.calculateScores()
+        Model(framework)
+        self.generateExtension(framework)
 
     def isConflictFree(self, argument):
         for extensionArgument in self.extension:
@@ -65,9 +68,13 @@ class Analyser():
     def isAdmissible(self, argument):
         return self.isConflictFree(argument) and self.isDefended(argument)
 
-    def generateExtension(self):
-        print("evaluating")
-        self.extension = [self.sortedArguments[0]]
-        for argument in self.sortedArguments[1:]:
+    def generateExtension(self, framework):
+        print("Evaluating extension")
+        sortedArguments = sorted(framework.arguments, key=lambda argument: argument.strength, reverse=True)
+        self.extension = [sortedArguments[0]]
+        for argument in sortedArguments[1:]:
             if self.isAdmissible(argument): self.extension.append(argument)
-        return self.extension
+        print("Strongest complete extension: {"), 
+        for argument in self.extension:
+            print(argument.name),
+        print("}")

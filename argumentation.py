@@ -1,11 +1,12 @@
 # represents an argument node to be made in the framework
 class Argument():
     
-    def __init__(self, name, score):
+    def __init__(self, name, positive = 0, negative = 0):
         self.name = name
         self.attacks, self.attackedBy = [],[]
         self.supports, self.supportedBy = [],[]
-        self.score, self.strength = score, 0
+        self.score, self.strength = 0, 0
+        self.positiveVotes, self.negativeVotes = positive, negative
     
     def attack(self, other):
         if self is not other and other not in self.supports:
@@ -19,10 +20,10 @@ class Argument():
             other.supportedBy.append(self)
         else: print("unable to add support from " + self.name + " to " + other.name)
 
-    def setStrength(self, strength): self.strength = "{0:.2f}".format(strength)
+    def updateScore(self): self.score = float(self.positiveVotes)/(float(self.positiveVotes + self.negativeVotes))
 
     def __str__(self): 
-        string = "\'" + self.name + "\' : " + str(self.score) + " -> " + str(self.strength) + ")  |"
+        string = "\'" + self.name + "\' : " + str("{0:.2f}".format(self.score)) + " -> " + str("{0:.2f}".format(self.strength)) + ")  |"
         if self.attacks: string += " attacks: "
         for argument in self.attacks: string += argument.name + ", "
         if self.supports: string += " supports: "
@@ -40,6 +41,10 @@ class Framework():
             self.arguments.append(argument)
 
     def locate(self, name): return next((argument for argument in self.arguments if argument.name == name), None)
+
+    def calculateScores(self):
+        for argument in self.arguments:
+            argument.updateScore()
 
     def __str__(self): 
         state = "Debate Results: \n" 

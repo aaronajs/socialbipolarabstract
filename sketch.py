@@ -2,8 +2,8 @@ from graphviz import Digraph
 
 class Sketch():
     
-    def draw(self, name, framework, show):
-        print("sketching")
+    def __init__(self, name, framework, show):
+        print("Sketching debate")
         dot = Digraph(comment=name)
         for arg in framework.arguments:
             dot.node(arg.name, arg.name, shape='circle')
