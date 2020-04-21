@@ -16,15 +16,14 @@ try: # reads text file
                 parameters = instruction[0][4:-1].lower().replace('\n','').split(',')
                 # at most three values - if no votes for 'arg', 0 is used for each number of votes
                 attributes = [parameters[i] if len(parameters) > i else 0 for i in range(3)]
-            except: sys.exit("Parse error: Line", instruction[1], "->", instruction[0])
-            try: # performs actions based on command
+                # performs actions based on command
                 # adds new argument to framework, if no number of votes, 0 is used
                 if command == 'arg': framework.addArgument(Argument(attributes[0],int(attributes[1]),int(attributes[2])))
                 # locates the two arguments and adds an attack or support between them
                 elif command == 'att': framework.locate(attributes[0]).attack(framework.locate(attributes[1]))
                 elif command == 'sup': framework.locate(attributes[0]).support(framework.locate(attributes[1]))
                 else: print("Ignoring: Line", instruction[1], "->", instruction[0])
-            except: sys.exit("Syntax error: Line", instruction[1], "->", instruction[0])
+            except: print("Syntax error: Line", instruction[1], "->", instruction[0]); sys.exit()
             # load next instruction from file
             instruction = (debate.readline().strip(),instruction[1]+1)
 except: sys.exit("Unable to read file \""+filename+".txt\"")

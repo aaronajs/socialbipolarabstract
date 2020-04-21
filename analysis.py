@@ -23,7 +23,7 @@ class Model():
         relationBy = argument.attackedBy if relationType == "attack" else argument.supportedBy
         relationsCount = len(relationBy) # counts number of relations on argument
         if relationsCount == 0: return 0 # if no relations, no further affect
-        # else use product notation of social modal to finish off equation
+        # else use product notation of social model to finish off equation
         else: return self.collectRelations(values, relationBy, relationsCount, 1, values[self.arguments.index(relationBy[0])])
 
     # iterates through each relation (of the same type) on an Argument to get strength (current interation)
