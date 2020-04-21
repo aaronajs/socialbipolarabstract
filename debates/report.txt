@@ -1,6 +1,0 @@
-arg(a,5,5)
-arg(b,8,8)
-arg(c,6,1)
-att(a,b)
-att(b,a)
-att(c,b)

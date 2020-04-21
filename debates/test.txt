@@ -1,4 +1,0 @@
-arg(a,5,0)
-arg(b,5,0)
-att(a,b)
-att(b,a)
